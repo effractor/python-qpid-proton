@@ -31,3 +31,39 @@ Inslall qpid-config and create queue
 yum install qpid-tools
 qpid-config add queue testqueue
 qpid-config list queue
+
+
+Start python:3.6 container
+
+docker run --name qpid-client -it python:3.6 sh
+
+# pip install python-qpid-proton
+
+Check if SSL is present in proton:
+
+# python
+>>> import proton
+>>> proton.SSL.present() 
+True
+
+Copy python examples:
+
+docker cp send.py qpid-client:/home/
+docker cp receive.py qpid-client:/home/
+
+Start python 3.6
+
+docker start -i qpid-client
+cd /home/
+# python send.py
+# python receive.py
+Hello World!
+
+Note: you need to set correct IP address of qpidd container in the QPIDD_HOST var:
+QPIDD_HOST = '172.17.0.2:5672'
+
+Docker IP address cen be faund like this:
+
+docker inspect qpidd
+
+check Networks->bridge->IPAddress attribute
